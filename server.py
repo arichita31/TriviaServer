@@ -1,3 +1,4 @@
+import socket
 # Protocol Constants
 
 CMD_FIELD_LENGTH = 16  # Exact length of cmd field (in bytes)
@@ -24,7 +25,13 @@ PROTOCOL_SERVER = {
 
 ERROR_RETURN = None  # What is returned in case of an error
 
+#server IP address and PORT
+IP, PORT = "127.0.0.1", 8080
 
+#create socket for communication with client
+sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+sock.bind((IP, PORT))
+sock.listen(5)
 
 
 def is_msg_valid(msg):
@@ -45,7 +52,7 @@ def build_message(cmd, data):
     # Implement code ...
 
 
-return full_msg
+#return full_msg
 
 
 def parse_message(data):
@@ -58,7 +65,7 @@ def parse_message(data):
     # The function should return 2 values
 
 
-return cmd, msg
+#return cmd, msg
 
 
 def split_msg(msg, expected_fields):
@@ -78,3 +85,18 @@ def join_msg(msg_fields):
     Returns: string that looks like cell1|cell2|cell3
     """
 # Implement code ...
+
+if __name__ == "__main__":
+    flag = True
+    print("Server is up and Running")
+
+    while flag:
+        client, address = sock.accept()
+        print(f'Connected with {address}')
+        msg = client.recv(1024).decode()
+        print(msg)
+        client.close()
+
+
+
+
