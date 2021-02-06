@@ -19,14 +19,23 @@ PROTOCOL_CLIENT = {
     "logged_msg": "LOGGED",
     "get_question_msg": "GET_QUESTION",
     "send_answer_msg": "SEND_ANSWER",
-    "my_score_msg": "MY_SCORE",
-    "high_score_msg": "HIGH_SCORE",
+    "get_score_msg": "MY_SCORE",
+    "high_score_msg": "HIGHSCORE",
 
 }  # .. Add more commands if needed
 
 PROTOCOL_SERVER = {
     "login_ok_msg": "LOGIN_OK",
-    "login_failed_msg": "ERROR"
+    "login_failed_msg": "ERROR",
+    "user_score_msg": "YOUR_SCORE",
+    "no_questions_msg": "NO_QUESTIONS",
+    "your_question_msg": "YOUR_QUESTION",
+    "error_msg": "ERROR",
+    "correct_answer_msg": "CORRECT_ANSWER",
+    "wrong_answer_msg": "WRONG_ANSWER",
+    "all_score_msg": "ALL_SCORE",
+    "logged_users_msg": "LOGGED_ANSWER"
+
 }  # ..  Add more commands if needed
 
 # Other constants
