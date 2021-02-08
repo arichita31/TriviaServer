@@ -58,7 +58,7 @@ def build_send_recv_parse(conn, command_code_sent, data):
     # check for error respone from the server - and exit, except for failed attempt to login
     if command_code_got == chatlib.PROTOCOL_SERVER["error_msg"] and command_code_sent != chatlib.PROTOCOL_CLIENT["login_msg"]:
         print("-----------------------------")
-        error_and_exit(f"Error response from the server - {msg_data}")
+        error_and_exit(f"Error response from the server - {data}")
     return command_code_got, data
 
 
@@ -269,7 +269,7 @@ def main():
             play_question(sock)
 
         # get the personal score
-        elif choice in [str(CLIENT_OPTIONS.index("Get Score") + 1), "score", "Score", "Get Score", "my score"]:
+        elif choice in [str(CLIENT_OPTIONS.index("Get Score") + 1), "score", "Score", "Get Score", "get score", "my score"]:
             get_score(sock)
 
         # get the leader board
