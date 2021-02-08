@@ -1,6 +1,6 @@
 import socket  # for communication with the server
 import chatlib  # To use chatlib functions or consts, use chatlib.****
-import random   # for compliments
+import random   # for random compliments
 
 SERVER_IP = "127.0.0.1"  # Our server will run on same computer as client
 SERVER_PORT = 5678
@@ -8,7 +8,7 @@ SERVER_PORT = 5678
 CLIENT_OPTIONS = ["Play", "Get Score", "LeaderBoard", "Logged Users", "Logout"]
 # HELPER SOCKET METHODS
 
-compliments = ["Well Done!", "Pure Genius!", "Good One!", "So Sharp!"]
+compliments = ["Well Done!", "Pure Genius!", "Good One!", "So Sharp!", "Amazing!", "Let's Go!"]
 
 def build_and_send_message(conn, command_code, data):
     """
