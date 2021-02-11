@@ -136,8 +136,15 @@ def handle_login_message(conn, data):
     """
     global users  # This is needed to access the same users dictionary from all functions
     global logged_users	 # To be used later
+    # extract the username and the password from the given data message
+    givenuname, givenpass = data.split("#")
+    # check if the user is exist in the dictionary and that its password matches the the password that was given
+    if givenuname in users.keys() and users[givenuname]["password"] == givenpass:
+        build_and_send_message(conn, chatlib.PROTOCOL_SERVER["login_ok_msg"], "")
+    # if not send error
+    else:
+        send_error(conn, "Error! This user does not exist!")
 
-# Implement code ...
 
 
 def handle_client_message(conn, cmd, data):
@@ -157,9 +164,18 @@ def main():
     global users
     global questions
 
-    print("Welcome to Trivia Server!")
+    users = load_user_database()
 
-# Implement code ...
+    print("Welcome to Trivia Server!")
+    sock = setup_socket()
+    client_sock, addr = sock.accept()
+    while True:
+        msg = client_sock.recv(1024).decode()
+        command, data = chatlib.parse_message(msg)
+        if command == "LOGIN":
+            handle_login_message(client_sock, data)
+
+
 
 
 
