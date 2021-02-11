@@ -174,14 +174,23 @@ def main():
 
     print("Welcome to Trivia Server!")
 
+    # load the db of the server
     users = load_user_database()
     questions = load_questions()
-    sock = setup_socket()
-    client_sock, addr = sock.accept()
 
-    while True:
+    # set up the socket of the server to listening
+    sock = setup_socket()
+
+    # connection was made
+    client_sock, addr = sock.accept()
+    client_connected = True
+
+    while client_connected:
         msg_code, data = recv_message_and_parse(client_sock)
         handle_client_message(client_sock, msg_code, data)
+        # the client is no longer connected
+        if msg_code == chatlib.PROTOCOL_CLIENT["logout_msg"]:
+            client_connected = False
 
 
 if __name__ == '__main__':
