@@ -123,6 +123,7 @@ def handle_logout_message(conn):
     Returns: None
     """
     global logged_users
+    conn.close()
 
 # Implement code ...
 
@@ -147,13 +148,20 @@ def handle_login_message(conn, data):
 
 
 
-def handle_client_message(conn, cmd, data):
+def handle_client_message(conn, msg_code, data):
     """
     Gets message code and data and calls the right function to handle command
     Recieves: socket, message code and data
     Returns: None
     """
     global logged_users	 # To be used later
+    if msg_code == chatlib.PROTOCOL_CLIENT["login_msg"]:
+        handle_login_message(conn, data)
+    elif msg_code == chatlib.PROTOCOL_CLIENT["logout_msg"] or msg_code == "":
+        handle_logout_message(conn)
+    else:
+        send_error(conn, "Error -> The command is not recognized")
+
 
 # Implement code ...
 
@@ -164,19 +172,16 @@ def main():
     global users
     global questions
 
-    users = load_user_database()
-
     print("Welcome to Trivia Server!")
+
+    users = load_user_database()
+    questions = load_questions()
     sock = setup_socket()
     client_sock, addr = sock.accept()
+
     while True:
-        msg = client_sock.recv(1024).decode()
-        command, data = chatlib.parse_message(msg)
-        if command == "LOGIN":
-            handle_login_message(client_sock, data)
-
-
-
+        msg_code, data = recv_message_and_parse(client_sock)
+        handle_client_message(client_sock, msg_code, data)
 
 
 if __name__ == '__main__':
