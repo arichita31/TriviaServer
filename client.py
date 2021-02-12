@@ -251,6 +251,7 @@ def main():
     """
     # connect socket to server
     sock = connect()
+
     # login your user
     login(sock)
 
@@ -296,5 +297,11 @@ def main():
             print(options_message)
 
 
+    # code for cheking things when there isnt a perfect client side like we did
+    # while True:
+    #
+    #     msg = input("enter")
+    #     msg2 = input("enter")
+    #     build_send_recv_parse(sock, msg, msg2)
 if __name__ == '__main__':
     main()

@@ -95,8 +95,6 @@ def setup_socket():
     return sock
 
 
-
-
 def send_error(conn, error_msg):
     """
     Send error message with given message
@@ -106,14 +104,15 @@ def send_error(conn, error_msg):
     build_and_send_message(conn, chatlib.PROTOCOL_SERVER["error_msg"], error_msg)
 
 
-
-
-##### MESSAGE HANDLING
-
-
 def handle_getscore_message(conn, username):
+    """
+    the function identifies the username using getpeername and logged users dict than extracting the score from users dict and send it to the client
+    :param conn: client sock
+    :param username: username, taken from logged users dict where key is the address of the client sock
+    :return: nothing
+    """
     global users
-# Implement this in later chapters
+    build_and_send_message(conn, chatlib.PROTOCOL_SERVER["user_score_msg"], str(users[username]["score"]))
 
 
 def handle_logout_message(conn):
@@ -123,6 +122,9 @@ def handle_logout_message(conn):
     Returns: None
     """
     global logged_users
+    # remove the client from the logged users dictionary
+    del logged_users[conn.getpeername()]
+    # close the socket of the client
     conn.close()
 
 # Implement code ...
@@ -141,11 +143,11 @@ def handle_login_message(conn, data):
     givenuname, givenpass = data.split("#")
     # check if the user is exist in the dictionary and that its password matches the the password that was given
     if givenuname in users.keys() and users[givenuname]["password"] == givenpass:
+        logged_users[conn.getpeername()] = givenuname
         build_and_send_message(conn, chatlib.PROTOCOL_SERVER["login_ok_msg"], "")
     # if not send error
     else:
         send_error(conn, "Error! This user does not exist!")
-
 
 
 def handle_client_message(conn, msg_code, data):
@@ -155,20 +157,39 @@ def handle_client_message(conn, msg_code, data):
     Returns: None
     """
     global logged_users	 # To be used later
-    if msg_code == chatlib.PROTOCOL_CLIENT["login_msg"]:
+    # check if the client is logged
+    is_logged = False
+    if conn.getpeername() in logged_users.keys():
+        is_logged = True
+
+    # LOGIN COMMAND - check if the client is not connected yet
+    if msg_code == chatlib.PROTOCOL_CLIENT["login_msg"] and not is_logged:
         handle_login_message(conn, data)
-    elif msg_code == chatlib.PROTOCOL_CLIENT["logout_msg"] or msg_code == "":
-        handle_logout_message(conn)
+
+    # if the command of the message is not login message  and the client is connected
+    elif is_logged:
+        if msg_code == chatlib.PROTOCOL_CLIENT["login_msg"]:
+            send_error(conn, "Error! Already Logged In")
+        # LOGOUT COMMAND
+        if msg_code == chatlib.PROTOCOL_CLIENT["logout_msg"] or msg_code == "":
+            handle_logout_message(conn)
+
+        # GET SCORE COMMAND
+        elif msg_code == chatlib.PROTOCOL_CLIENT["get_score_msg"]:
+            handle_getscore_message(conn, logged_users[conn.getpeername()])
+
+        else:
+            send_error(conn, "Error! The command is not recognized!")
+
     else:
-        send_error(conn, "Error -> The command is not recognized")
+        send_error(conn, "Error! You need to login first to have permission!")
 
 
-# Implement code ...
 
 
 
 def main():
-    # Initializes global users and questions dicionaries using load functions, will be used later
+    # Initializes global users and questions dictionaries using load functions, will be used later
     global users
     global questions
 
@@ -181,17 +202,21 @@ def main():
     # set up the socket of the server to listening
     sock = setup_socket()
 
-    # connection was made
-    client_sock, addr = sock.accept()
-    client_connected = True
+    while True:
+        # connection was made
+        client_sock, addr = sock.accept()
+        print(f'Connected with client {addr}')
+        client_sock.getpeername()
+        client_connected = True
 
-    while client_connected:
-        msg_code, data = recv_message_and_parse(client_sock)
-        handle_client_message(client_sock, msg_code, data)
-        # the client is no longer connected
-        if msg_code == chatlib.PROTOCOL_CLIENT["logout_msg"]:
-            client_connected = False
+        while client_connected:
+            msg_code, data = recv_message_and_parse(client_sock)
+            handle_client_message(client_sock, msg_code, data)
+            # the client is no longer connected
+            if msg_code == chatlib.PROTOCOL_CLIENT["logout_msg"]:
+                client_connected = False
 
+    ############################## NEED TO FIX A MESSAGE WITH A COMMAND WHO ISNT RECOGNIZED
 
 if __name__ == '__main__':
     main()
