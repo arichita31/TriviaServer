@@ -39,7 +39,6 @@ def recv_message_and_parse(conn):
     # parse the message using chatlib
     command_code, msg_data = chatlib.parse_message(message_gotten)
 
-
     return command_code, msg_data
 
 
@@ -52,13 +51,13 @@ def build_send_recv_parse(conn, command_code_sent, data):
     :return: command_code: the command code of the response from the server data: the data of the response
     """
     # build and send the message
-    build_and_send_message(conn, command_code_sent, data)
+    build_and_send_message(conn, str(command_code_sent), str(data))
     # get the response from the server and extract the command and the data
     command_code_got, data = recv_message_and_parse(conn)
     # check for error respone from the server - and exit, except for failed attempt to login
-    if command_code_got == chatlib.PROTOCOL_SERVER["error_msg"] and command_code_sent != chatlib.PROTOCOL_CLIENT["login_msg"]:
+    if command_code_got == chatlib.PROTOCOL_SERVER["error_msg"]:
         print("-----------------------------")
-        error_and_exit(f"Error response from the server - {data}")
+        print(f'Request Failed: {data}')
     return command_code_got, data
 
 
@@ -108,9 +107,15 @@ def login(conn):
             print("-----------------------------")
             print(f'Logged in as: {username} :)')
             return
-        else:
+
+        # the login failed request the user for username and password again
+        elif command_code == chatlib.PROTOCOL_SERVER["error_msg"]:
             print("-----------------------------")
             print("Login failed :( \nTry Again!")
+
+        else:
+            print("-----------------------------")
+            error_and_exit(f"Unexpected Error :(")
 
 
 def logout(conn):
@@ -136,6 +141,10 @@ def get_score(conn):
     if command_code == chatlib.PROTOCOL_SERVER["user_score_msg"]:
         print("-----------------------------")
         print(f'Your Score is: {data}')
+
+    # the server sent error, stop function
+    elif command_code == chatlib.PROTOCOL_SERVER["error_msg"]:
+        return
 
     else:
         print("-----------------------------")
@@ -206,6 +215,10 @@ def play_question(conn):
             print("-----------------------------")
             error_and_exit(f"Unexpected Error :(")
 
+    # the server sent error, stop function
+    elif command_code == chatlib.PROTOCOL_SERVER["error_msg"]:
+        return
+
     # unexpected error - how did you get here
     else:
         print("-----------------------------")
@@ -223,6 +236,10 @@ def get_high_score(conn):
         print("-----------------------------")
         print(f'Leader Board \n{data}')
 
+    # the server sent error, stop function
+    elif command_code == chatlib.PROTOCOL_SERVER["error_msg"]:
+        return
+
     else:
         print("-----------------------------")
         error_and_exit(f"Unexpected Error :(")
@@ -238,6 +255,10 @@ def logged_users(conn):
     if command_code == chatlib.PROTOCOL_SERVER["logged_users_msg"]:
         print("-----------------------------")
         print(f'Logged Users \n{data}')
+
+    # the server sent error, stop function
+    elif command_code == chatlib.PROTOCOL_SERVER["error_msg"]:
+       return
 
     else:
         print("-----------------------------")

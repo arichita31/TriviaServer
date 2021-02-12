@@ -24,7 +24,7 @@ def build_and_send_message(conn, command_code, data):
     Paramaters: conn (socket object), code (str), msg (str)
     Returns: nothing
     """
-    message = chatlib.build_message(command_code, data)
+    message = chatlib.build_message(command_code, str(data))
     conn.send(message.encode())
     # Debug Info
     print("-----------------------------")
@@ -46,11 +46,10 @@ def recv_message_and_parse(conn):
     # parse the message using chatlib
     command_code, msg_data = chatlib.parse_message(message_gotten)
 
-
     return command_code, msg_data
 
-# Data Loaders #
 
+# Data Loaders #
 def load_questions():
     """
     Loads questions bank from file	## FILE SUPPORT TO BE ADDED LATER
@@ -73,9 +72,9 @@ def load_user_database():
     Returns: user dictionary
     """
     users = {
-        "test"	:	{"password" :"test" ,"score" :0 ,"questions_asked" :[]},
-        "yossi"		:	{"password" :"123" ,"score" :50 ,"questions_asked" :[]},
-        "master"	:	{"password" :"master" ,"score" :200 ,"questions_asked" :[]}
+        "test"	:	{"password": "test", "score": 0, "questions_asked": []},
+        "yossi"		:	{"password": "123", "score": 50, "questions_asked": []},
+        "master"	:	{"password": "master", "score": 200, "questions_asked": []}
     }
     return users
 
@@ -112,6 +111,7 @@ def handle_getscore_message(conn, username):
     :return: nothing
     """
     global users
+    # byild a message and send to the client with YOUR_SCORE command and the score which is int so cast it to str
     build_and_send_message(conn, chatlib.PROTOCOL_SERVER["user_score_msg"], str(users[username]["score"]))
 
 
@@ -185,9 +185,6 @@ def handle_client_message(conn, msg_code, data):
         send_error(conn, "Error! You need to login first to have permission!")
 
 
-
-
-
 def main():
     # Initializes global users and questions dictionaries using load functions, will be used later
     global users
@@ -205,8 +202,7 @@ def main():
     while True:
         # connection was made
         client_sock, addr = sock.accept()
-        print(f'Connected with client {addr}')
-        client_sock.getpeername()
+        print(f'Connected with client {client_sock.getpeername()}')
         client_connected = True
 
         while client_connected:
