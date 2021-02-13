@@ -10,7 +10,7 @@ import random
 users = {}
 questions = {}
 logged_users = {}  # a dictionary of client hostnames to usernames - will be used later
-asked_questions = {}  # a dictionary with all the questions codes that the user (key) have been asked
+
 
 ERROR_MSG = "Error! "
 SERVER_PORT = 5678
@@ -105,7 +105,7 @@ def send_error(conn, error_msg):
     build_and_send_message(conn, chatlib.PROTOCOL_SERVER["error_msg"], error_msg)
 
 
-def handle_getscore_message(conn, username):
+def handle_get_score_message(conn, username):
     """
     the function identifies the username using getpeername and logged users dict than extracting the score from users dict and send it to the client
     :param conn: client sock
@@ -113,7 +113,7 @@ def handle_getscore_message(conn, username):
     :return: nothing
     """
     global users
-    # byild a message and send to the client with YOUR_SCORE command and the score which is int so cast it to str
+    # build a message and send to the client with YOUR_SCORE command and the score which is int so cast it to str
     build_and_send_message(conn, chatlib.PROTOCOL_SERVER["user_score_msg"], str(users[username]["score"]))
 
 
@@ -171,18 +171,25 @@ def handle_client_message(conn, msg_code, data):
 
     # if the command of the message is not login message  and the client is connected
     elif is_logged:
+        username = logged_users[conn.getpeername()]
         if msg_code == chatlib.PROTOCOL_CLIENT["login_msg"]:
             send_error(conn, "Error! Already Logged In")
+
         # LOGOUT COMMAND
         if msg_code == chatlib.PROTOCOL_CLIENT["logout_msg"] or msg_code == "":
             handle_logout_message(conn)
 
         # GET SCORE COMMAND
         elif msg_code == chatlib.PROTOCOL_CLIENT["get_score_msg"]:
-            handle_getscore_message(conn, logged_users[conn.getpeername()])
+            handle_get_score_message(conn, username)
 
+        # GET QUESTION COMMAND
         elif msg_code == chatlib.PROTOCOL_CLIENT["get_question_msg"]:
-            handle_question_message(conn, logged_users[conn.getpeername()])
+            handle_question_message(conn, username)
+
+        # SEND ANSWER COMMAND
+        elif msg_code == chatlib.PROTOCOL_CLIENT["send_answer_msg"]:
+            handle_answer_message(conn, username, data)
 
         else:
             send_error(conn, "Error! The command is not recognized!")
@@ -197,19 +204,20 @@ def create_random_question(username):
        :param username: the name of the user
        :return: the data for YOUR_QUESTION
        """
-
+    # the number of the questions
     questions_dict_len = len(questions)
-    key_list = list(questions.keys())
-    if username not in asked_questions.keys():  # if the username isn't save, create field for him
-        asked_questions[username] = []
-    while True:  # search random question that wasn't answered until you find one then return
-        random_question_num = random.randint(0, questions_dict_len - 1)
-        question_code = key_list[random_question_num]
+    # list of all th questions codes
+    questions_codes_list = list(questions.keys())
 
-        if question_code not in asked_questions[username]:
+    while True:  # search random question that wasn't answered until you find one then return
+        # random index between 0 and end index
+        random_question_num = random.randint(0, questions_dict_len - 1)
+        question_code = questions_codes_list[random_question_num]
+
+        if question_code not in users[username]["questions_asked"]:
             # if the question wasn't asked return the question and answers
             # add the question code to the questions that were asked
-            asked_questions[username].append(question_code)
+            users[username]["questions_asked"].append(question_code)
             # arrange the answer by the YOUR_QUESTION format
 
             answers = questions[question_code]["answers"]
@@ -220,8 +228,8 @@ def create_random_question(username):
         # if the question was already asked check if all the questions
         # were asked (by length) and return None if True
         else:
-            if len(questions) == len(asked_questions[username]):
-                return None
+            if len(questions) == len(users[username]["questions_asked"]):
+                return ""
 
 
 def handle_question_message(conn, username):
@@ -234,13 +242,45 @@ def handle_question_message(conn, username):
     :return: nothing
     """
     data = create_random_question(username)
-    if data is not None:
+    if data != "":
         # return the Your_Question message
         msg_code = chatlib.PROTOCOL_SERVER["your_question_msg"]
     else:
         # return the No Questions message
         msg_code = chatlib.PROTOCOL_SERVER["no_questions_msg"]
     build_and_send_message(conn, msg_code, data)
+
+
+def handle_answer_message(conn, username, answer_msg):
+    """
+    the functions get the answer for the question that the client was asked check if it is right
+    and sends a proper answer based on the protocol
+    :param conn: the client socket
+    :param username: the client username where key is the address of the client in logged users dict
+    :param answer: the client answer to the questions
+    :return: nothing
+    """
+    global users
+    global questions
+    # extract the id and the choice of the client from the data of the message id#choice
+    question_code, choice = answer_msg.split("#")
+    # extract the right answer for the question using the questions dict - we get int so cast it to str
+    correct_answer = str(questions[int(question_code)]["correct"])
+    # check if the choice of the client is the right answer
+    # correct answer
+    if correct_answer == choice:
+        command_code = chatlib.PROTOCOL_SERVER["correct_answer_msg"]
+        data = ""
+        # add 5 points
+        users[username]["score"] += 5
+
+    # wrong answer
+    else:
+        command_code = chatlib.PROTOCOL_SERVER["wrong_answer_msg"]
+        data = str(correct_answer)
+
+    # build and send the response message
+    build_and_send_message(conn, command_code, data)
 
 
 def main():

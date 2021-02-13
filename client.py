@@ -205,7 +205,7 @@ def play_question(conn):
         # right answer
         if command_code == chatlib.PROTOCOL_SERVER["correct_answer_msg"]:
             print("-----------------------------")
-            print(f"CORRECT! {compliments[random.randint(0, len(compliments))]} ")
+            print(f"CORRECT! {compliments[random.randint(0, len(compliments) - 1)]} ")
         # wrong answer
         elif command_code == chatlib.PROTOCOL_SERVER["wrong_answer_msg"]:
             print("-----------------------------")
