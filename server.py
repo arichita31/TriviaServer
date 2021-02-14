@@ -48,6 +48,10 @@ def recv_message_and_parse(conn):
     # parse the message using chatlib
     command_code, msg_data = chatlib.parse_message(message_gotten)
 
+    # check for problems when getting a message
+    if command_code is None or msg_data is None:
+        error_and_exit("An error occurred while trying to get a message headers, None Values")
+
     return command_code, msg_data
 
 
@@ -103,6 +107,16 @@ def send_error(conn, error_msg):
     Returns: None
     """
     build_and_send_message(conn, chatlib.PROTOCOL_SERVER["error_msg"], error_msg)
+
+
+def error_and_exit(msg):
+    """
+    when error occurs the function finishes the program and prints the error message
+    :param msg: error message
+    :return: nothing
+    """
+    print(msg)
+    exit()
 
 
 def handle_get_score_message(conn, username):
@@ -204,6 +218,8 @@ def create_random_question(username):
        :param username: the name of the user
        :return: the data for YOUR_QUESTION
        """
+    global users
+    global questions
     # the number of the questions
     questions_dict_len = len(questions)
     # list of all th questions codes
@@ -309,8 +325,6 @@ def main():
             # the client is no longer connected
             if msg_code == chatlib.PROTOCOL_CLIENT["logout_msg"]:
                 client_connected = False
-
-    ############################## NEED TO FIX A MESSAGE WITH A COMMAND WHO ISNT RECOGNIZED
 
 
 if __name__ == '__main__':

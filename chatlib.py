@@ -12,7 +12,7 @@ DELIMITER = "|"  # Delimiter character in protocol
 # Protocol Messages
 # In this dictionary we will have all the client and server command names
 
-#לבדוק למה צריך את זה את המילון הזה אם אין שימוש בצד שמאל שלו בכלל
+
 PROTOCOL_CLIENT = {
     "login_msg": "LOGIN",
     "logout_msg": "LOGOUT",
@@ -159,7 +159,7 @@ def is_fields_valid(command, length, data): # לבדוק אם להכניס 0 א�
     return True
 
 
-def parse_message(data): # לבדוק אם ניתן לקבל יותר מ3 מפרידים מסוג |
+def parse_message(data): # לבדוק אם ניתן לקבל יותר מ2 מפרידים מסוג |
     """
     Parses protocol message and returns command name and data field
     Returns: cmd (str), data (str). If some error occured returns None, None
@@ -181,7 +181,7 @@ def parse_message(data): # לבדוק אם ניתן לקבל יותר מ3 מפר
 
     # check if the command that was given is written right
     if not is_fields_valid(command, length, data):
-        print("Not Valid!")
+        print("Message Fields Are Not Valid!")
         return ERROR_RETURN, ERROR_RETURN
 
     command_name = command.strip()

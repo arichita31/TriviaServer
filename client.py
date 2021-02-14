@@ -39,6 +39,10 @@ def recv_message_and_parse(conn):
     # parse the message using chatlib
     command_code, msg_data = chatlib.parse_message(message_gotten)
 
+    # check for problems when getting a message
+    if command_code is None or msg_data is None:
+        error_and_exit("An error occurred while trying to get a message headers, None Values")
+
     return command_code, msg_data
 
 
@@ -162,7 +166,7 @@ def play_question(conn):
     # check the command we got
     if command_code == chatlib.PROTOCOL_SERVER["no_questions_msg"]:
         print("-----------------------------")
-        print(f'WOW! You have answered all the questons, you better find something better to do with your life...')
+        print(f'WOW! You have answered all the questions, you better find something better to do with your life...')
         return
 
     # we got question
@@ -317,8 +321,8 @@ def main():
             print("Sorry this is not available!")
             print(options_message)
 
-
-    # code for cheking things when there isnt a perfect client side like we did
+    ####################### the messages print is for debugging in the meanwhile!!!!!!!!!!!!
+    # code for cheking
     # while True:
     #
     #     msg = input("enter")
