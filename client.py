@@ -258,7 +258,10 @@ def logged_users(conn):
     command_code, data = build_send_recv_parse(conn, chatlib.PROTOCOL_CLIENT["logged_msg"], "")
     if command_code == chatlib.PROTOCOL_SERVER["logged_users_msg"]:
         print("-----------------------------")
-        print(f'Logged Users \n{data}')
+        print("Logged Users")
+        usernames = data.split(",")
+        for username in usernames:
+            print(username)
 
     # the server sent error, stop function
     elif command_code == chatlib.PROTOCOL_SERVER["error_msg"]:
