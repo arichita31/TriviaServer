@@ -16,7 +16,7 @@ logged_users = {}  # a dictionary of client hostnames to usernames - will be use
 
 
 ERROR_MSG = "Error! "
-SERVER_PORT = 5678
+SERVER_PORT = 6000
 SERVER_IP = "127.0.0.1"
 
 
@@ -83,7 +83,9 @@ def load_questions():
     questions = {
         2313: {"question": "How much is 2+2", "answers": ["3", "4", "2", "1"], "correct": 2},
         4122: {"question": "What is the capital of France?", "answers": ["Lion", "Marseille", "Paris", "Montpellier"],
-               "correct": 3}
+               "correct": 3},
+        2212: {"question": "When was Israel established", "answers": ["1948", "1917", "1947", "1949"], "correct": 1},
+        2314: {"question": "Who was the first commandant of Auschwitz", "answers": ["Reinhard Heydrich", "Adolf Eiechmann", "Adolf Hitler", "Rudolf Hoess"], "correct": 4}
     }
 
     return questions
@@ -120,9 +122,29 @@ def load_user_database():
 
         # finally, build the dictionary that will give us eay access to the users info during the run
         users[username] = {"password": password, "score": score, "questions_asked": questions_asked}
-
+    file.close()
     return users
 
+
+def upload_to_database():
+    """
+    this function updates the database everytime there is a change in users data.
+    :return: None
+    """
+    # create a string that contains the rows of the database
+    rows_to_load = []
+    for user in users.keys():
+        # the questions part of each user is stored while joined by $ so we need to take this list than convert each
+        # value to string and join it by $
+        questions_asked = [str(i) for i in users[user]["questions_asked"]]
+        # create lambda that checks if list empty than returns "" or format to match database
+        x = lambda l: "" if list == [] else "$".join(l)
+        # add each user to as a different row in the database
+        rows_to_load.append(f'{user},{users[user]["password"]},{users[user]["score"]},{x(questions_asked)}')
+    # after we formatted as a string the information we wanted to load. open the database, overwrite it then close file
+    file = open("database.txt", "w")
+    file.write("\n".join(rows_to_load))
+    file.close()
 
 # SOCKET CREATOR
 
@@ -337,6 +359,8 @@ def create_random_question(username):
             # if the question wasn't asked return the question and answers
             # add the question code to the questions that were asked
             users[username]["questions_asked"].append(question_code)
+            # update the database
+            upload_to_database()
             # arrange the answer by the YOUR_QUESTION format
 
             answers = questions[question_code]["answers"]
@@ -392,6 +416,8 @@ def handle_answer_message(conn, username, answer_msg):
         data = ""
         # add 5 points
         users[username]["score"] += 5
+        # score was changed update database
+        upload_to_database()
 
     # wrong answer
     else:

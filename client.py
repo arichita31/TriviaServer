@@ -3,7 +3,7 @@ import chatlib  # To use chatlib functions or consts, use chatlib.****
 import random   # for random compliments
 
 SERVER_IP = "127.0.0.1"  # Our server will run on same computer as client
-SERVER_PORT = 5678
+SERVER_PORT = 6000
 
 CLIENT_OPTIONS = ["Play", "Get Score", "LeaderBoard", "Logged Users", "Logout"]
 # HELPER SOCKET METHODS
