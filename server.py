@@ -77,7 +77,7 @@ def print_client_sockets():
 def load_questions():
     """
     Loads questions bank from file	## FILE SUPPORT TO BE ADDED LATER
-    Recieves: -
+    Recieves: None
     Returns: questions dictionary
     """
     questions = {
@@ -98,7 +98,29 @@ def load_questions():
         4131: {"question": "Which one of the following was the biggest empire at its best?",
                "answers": ["Roman Empire", "Russian Empire", "Turkish Empire", "British Empire"], "correct": 4},
         4130: {"question": "What is the most popular Programming Language in 2020?",
-               "answers": ["C", "Python", "Java", "JavaScript"], "correct": 2}
+               "answers": ["C", "Python", "Java", "JavaScript"], "correct": 2},
+        4139: {"question": "What year did World War I begin?",
+               "answers": ["1914", "1918", "1939", "1919"], "correct": 1},
+        3139: {"question": "What state is the largest state of the United States of America?",
+               "answers": ["Texas", "Alaska", "Washington", "California"], "correct": 2},
+        3129: {"question": "Which of these countries is NOT a part of the Asian continent?",
+               "answers": ["Georgia", "Russia", "Suriname", "Singapore"], "correct": 3},
+        3120: {"question": "What is the unit of currency in Australia?",
+               "answers": ["USD", "RUB", "NIS", "AUD"], "correct": 4},
+        3121: {"question": "In what year did the Wall Street Crash take place?",
+               "answers": ["1929", "1939", "1931", "1933"], "correct": 1},
+        3122: {"question": "When did the National Socialist German Workers' Party won the general election in Germany?",
+               "answers": ["1929", "1939", "1931", "1933"], "correct": 4},
+        3123: {"question": "Which ocean borders the west coast of the United States?",
+               "answers": ["Pacific", "Atlantic", "Indian", "Arctic"], "correct": 1},
+        3124: {"question": "What name was historically used for the Turkish city currently known as Istanbul?",
+               "answers": ["Hüdavendigar", "Söğüt", "Constantinople", "Adrianople"], "correct": 3},
+        3125: {"question": "What is the fastest land animal?",
+               "answers": ["Cheetah", "Lion", "Ostrich", "Jaguar"], "correct": 1},
+        3126: {"question": "Who was the greatest conqueror of all time",
+               "answers": ["Alexander the Great", "Napoleon Bonaparte", "Adolf Hitler", "Genghis Khan"], "correct": 4},
+        3128: {"question": "What is the 5th digit of pi?",
+               "answers": ["five", "one", "four", "nine"], "correct": 1},
     }
 
     return questions

@@ -132,7 +132,7 @@ def login(conn):
         # the login failed request the user for username and password again
         elif command_code == chatlib.PROTOCOL_SERVER["error_msg"]:
             print("-----------------------------")
-            print("Login failed :( \nTry Again!")
+            print(f"{message_gotten_data} \nTry Again!")
 
         else:
             print("-----------------------------")
