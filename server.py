@@ -97,8 +97,8 @@ def load_questions():
                "answers": ["248", "206", "365", "613"], "correct": 2},
         4131: {"question": "Which one of the following was the biggest empire at its best?",
                "answers": ["Roman Empire", "Russian Empire", "Turkish Empire", "British Empire"], "correct": 4},
-        4130: {"question": "What is the most popular Programming Language?",
-               "answers": ["C#", "Python", "Java", "JavaScript"], "correct": 3}
+        4130: {"question": "What is the most popular Programming Language in 2020?",
+               "answers": ["C#", "Python", "Java", "JavaScript"], "correct": 2}
     }
 
     return questions
