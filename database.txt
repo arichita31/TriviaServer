@@ -1,6 +1,6 @@
-test,test,0,2313$4122
+test,test,15,2313$4122$4133$4132$4130$2314
 yossi,123,70,
-master,master,240,
+master,master,0,
 zvish123,123,0,
 arichita31,chita,0,
 noraml,123,0,

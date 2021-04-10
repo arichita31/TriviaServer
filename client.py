@@ -20,8 +20,8 @@ def build_and_send_message(conn, command_code, data):
     message = chatlib.build_message(command_code, data)
     conn.send(message.encode())
     # Debug Info
-    print("-----------------------------")
-    print("We Sent The Server: \n" + message)
+    # print("-----------------------------")
+    # print("We Sent The Server: \n" + message)
 
 
 def recv_message_and_parse(conn):
@@ -34,8 +34,8 @@ def recv_message_and_parse(conn):
     """
     message_gotten = conn.recv(16384).decode()
     # Debug Info
-    print("-----------------------------")
-    print("The Server Sent Us: \n" + message_gotten)
+    # print("-----------------------------")
+    # print("The Server Sent Us: \n" + message_gotten)
     # parse the message using chatlib
     command_code, msg_data = chatlib.parse_message(message_gotten)
 
@@ -85,6 +85,16 @@ def error_and_exit(msg):
     print(msg)
     exit()
 
+def dont_have_special_keys(value):
+    """
+    the function checks that the string includes only letters between a to z or A to Z or numbers
+    :param value: username or password
+    :return: true if there are special keys else false
+    """
+    for i in value:
+        if not(i.isdigit() or i.isalpha()):
+            return False
+    return True
 
 def login(conn):
     """
@@ -97,8 +107,15 @@ def login(conn):
         # input from client
         print("-----------------------------")
         username = input("Please enter username: \n")
+        while not dont_have_special_keys(username):
+            print("-----------------------------")
+            username = input("username can include only letters or numbers, please try again:\n")
         print("-----------------------------")
         password = input("Please enter password: \n")
+        while not dont_have_special_keys(password):
+            print("-----------------------------")
+            password = input("Password can include only letters or numbers, please try again:\n")
+
         # create the data for login message
         message_data = username + "#" + password
         # build message using chatlib
