@@ -96,7 +96,9 @@ def load_questions():
         4135: {"question": "How many bones in human body?",
                "answers": ["248", "206", "365", "613"], "correct": 2},
         4131: {"question": "Which one of the following was the biggest empire at its best?",
-               "answers": ["Roman Empire", "Russian Empire", "Turkish Empire", "British Empire"], "correct": 3}
+               "answers": ["Roman Empire", "Russian Empire", "Turkish Empire", "British Empire"], "correct": 4},
+        4130: {"question": "What is the most popular Programming Language?",
+               "answers": ["C#", "Python", "Java", "JavaScript"], "correct": 3}
     }
 
     return questions
