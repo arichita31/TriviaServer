@@ -81,11 +81,19 @@ def load_questions():
     Returns: questions dictionary
     """
     questions = {
-        2313: {"question": "How much is 2+2", "answers": ["3", "4", "2", "1"], "correct": 2},
-        4122: {"question": "What is the capital of France?", "answers": ["Lion", "Marseille", "Paris", "Montpellier"],
-               "correct": 3},
-        2212: {"question": "When was Israel established", "answers": ["1948", "1917", "1947", "1949"], "correct": 1},
-        2314: {"question": "Who was the first commandant of Auschwitz", "answers": ["Reinhard Heydrich", "Adolf Eiechmann", "Adolf Hitler", "Rudolf Hoess"], "correct": 4}
+        2313: {"question": "Who invented the telephone", "answers": ["Thomas Edison", "Albert Einstein", "Martin Cooper", "Alexander Graham Bell"], "correct": 4},
+        4122: {"question": "What is the capital of France?",
+               "answers": ["Lion", "Marseille", "Paris", "Montpellier"], "correct": 3},
+        2212: {"question": "When did Israel gain independence",
+               "answers": ["1948", "1917", "1947", "1949"], "correct": 1},
+        2314: {"question": "Who was the first commandant of Auschwitz",
+               "answers": ["Reinhard Heydrich", "Adolf Eiechmann", "Adolf Hitler", "Rudolf Hoess"], "correct": 4},
+        4132: {"question": "Who was the first king of ancient Israel",
+               "answers": ["David", "Shlomo", "Shaul", "Rehavaam"],"correct": 3},
+        4133: {"question": "Pasta is an _____ dish",
+               "answers": ["Italian", "German", "British", "French"], "correct": 1},
+        4135: {"question": "How many bones in human body",
+               "answers": ["248", "206", "365", "613"], "correct": 2}
     }
 
     return questions
