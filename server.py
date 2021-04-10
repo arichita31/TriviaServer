@@ -116,7 +116,7 @@ def load_user_database():
     #     "yossi": {"password": "123", "score": 50, "questions_asked": []},
     #     "master": {"password": "master", "score": 200, "questions_asked": []}
     # }
-    # upload the text file that contains all of the users
+    # open the text file that contains all of the users
     file = open("database.txt")
     content_file = file.read()
     # each row stands for a user, separate the user by separating the rows with \n
@@ -135,6 +135,7 @@ def load_user_database():
 
         # finally, build the dictionary that will give us eay access to the users info during the run
         users[username] = {"password": password, "score": score, "questions_asked": questions_asked}
+    # close the file
     file.close()
     return users
 

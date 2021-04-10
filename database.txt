@@ -1,3 +1,7 @@
 test,test,0,2313$4122
-yossi,123,70,4122$2313$2212$2314
-master,master,200,
+yossi,123,70,
+master,master,240,
+zvish123,123,0,
+arichita31,chita,0,
+noraml,123,0,
+levin,meow,0,
